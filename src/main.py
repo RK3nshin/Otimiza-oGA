@@ -1,6 +1,6 @@
 from individuos import Individuo
 from Populacao import Populacao
-from AlgoritimoGenetico import AlgoritimoGenetico
+from AlgoritmoGenetico import AlgoritmoGenetico
 import matplotlib.pyplot as plt
 
 
@@ -122,15 +122,15 @@ if __name__ == "__main__":
     keyIdas = ["BRUFCO", "LHRFCO", "MADFCO", "DUBFCO", "CDGFCO", "LISFCO"]
     keyVolta = ["FCOBRU", "FCOLHR", "FCOMAD", "FCODUB", "FCOCDG", "FCOLIS"]
 
-    tamanho_populacao = 200
+    tamanho_populacao = 300
 
     populacaoida = Populacao(Voos_ida, tamanho_populacao, keyIdas, 1)
     populacaovolta = Populacao(Voos_Volta, tamanho_populacao, keyVolta, 0)
 
-    ga1 = AlgoritimoGenetico(populacaoida)
-    ga2 = AlgoritimoGenetico(populacaovolta)
+    ga1 = AlgoritmoGenetico(populacaoida)
+    ga2 = AlgoritmoGenetico(populacaovolta)
 
-    num_geracoes = 300
+    num_geracoes = 200
 
     melhor_aptidaoIda, pior_aptidaoIda, media_aptidaoIda, melhor_globalIda = ga1.executar(num_geracoes)
     melhor_aptidaoVolta, pior_aptidaoVolta, media_aptidaoVolta, melhor_globalVolta = ga2.executar(num_geracoes)

@@ -32,6 +32,13 @@ class Individuo:
     def __repr__(self):
         return f"(VoosIda={self.voos} \n"
     
+    def copy(self):
+        # Criar uma nova instância do Individuo
+        novo_individuo = Individuo([], self.key, self.flag)
+        # Copiar todos os atributos necessários
+        novo_individuo.voos = [Voo(voo.Origem, voo.Destino, voo.HorarioPartida, voo.HorarioChegada, voo.Preco) for voo in self.voos]
+        return novo_individuo
+    
     def calcular_aptidao(self):
         Alfa = 0.75
         Beta = 0.25

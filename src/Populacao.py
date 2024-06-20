@@ -3,7 +3,7 @@ import math
 from individuos import Individuo
 
 class Populacao:
-    melhor_global = None
+    
 
     def __init__(self, voos_disponiveis, tamanho_populacao, key, flag):
         self.voos_disponiveis = voos_disponiveis
@@ -52,18 +52,20 @@ class Populacao:
             nova_populacao.extend([filho1, filho2])
 
         self.individuos = nova_populacao[:self.tamanho_populacao]
-
-    def aplicar_elitismo(self):
+        self.avaliar()
+        
+    def aplicar_elitismo(self,melhor_global):
         # Selecionar os melhores indivíduos para sobreviverem
         elite = math.ceil(0.05 * self.tamanho_populacao)
-        self.individuos.sort(key=lambda ind: ind.calcular_aptidao())
-        melhores = self.individuos[:elite]
-        piores = self.individuos[-elite:]
+        
 
         # Substituir os piores indivíduos pelos melhores
         for i in range(elite):
-            self.individuos.remove(piores[i])
-            self.individuos.append(melhores[i])
+            self.individuos.remove(self.pior_individuo)
+            self.individuos.append(melhor_global)
+            self.pior_individuo = max(self.individuos, key=lambda ind: ind.calcular_aptidao())
+
+            
 
         # Atualizar pior indivíduo após elitismo
         self.pior_individuo = max(self.individuos, key=lambda ind: ind.calcular_aptidao())
