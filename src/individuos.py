@@ -32,6 +32,31 @@ class Individuo:
     def __repr__(self):
         return f"(VoosIda={self.voos} \n"
     
+    def Resultados(self):
+         PrecoFinal = 0 
+         TemposEsperaPorPessoa = []
+         if self.flag:
+            for voo in self.voos:
+                PrecoFinal += voo.Preco
+
+            # Calcula o tempo de espera para os voos de ida
+            tempos_chegada_ida = [voo.HorarioChegada for voo in self.voos]
+            TempoMaximoChegada = max(tempos_chegada_ida)
+            TemposEsperaPorPessoa = [TempoMaximoChegada - tempo for tempo in tempos_chegada_ida]
+            
+            return [PrecoFinal,TemposEsperaPorPessoa ]
+
+         else:
+            for voo in self.voos:
+                PrecoFinal += voo.Preco
+
+            # Calcula o tempo de espera para os voos de volta
+            tempos_partida_volta = [voo.HorarioPartida for voo in self.voos]
+            TempoMinimoPartida = min(tempos_partida_volta)
+            TemposEsperaPorPessoa = [tempo - TempoMinimoPartida  for tempo in tempos_partida_volta]
+
+            return [PrecoFinal,TemposEsperaPorPessoa]
+        
     def copy(self):
         # Criar uma nova instância do Individuo
         novo_individuo = Individuo([], self.key, self.flag)
@@ -40,8 +65,8 @@ class Individuo:
         return novo_individuo
     
     def calcular_aptidao(self):
-        Alfa = 0.75
-        Beta = 0.25
+        Alfa = 0.70
+        Beta = 0.30
         PrecoFinal = 0
         TemposEsperaPorPessoa = []
 

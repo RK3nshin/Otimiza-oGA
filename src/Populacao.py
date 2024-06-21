@@ -32,7 +32,7 @@ class Populacao:
         else:
             return max(competidores, key=lambda ind: ind.calcular_aptidao())
 
-    def proxima_geracao(self, prob_cruzamento=0.80, prob_mutacao=0.25):
+    def proxima_geracao(self, prob_cruzamento=0.80, prob_mutacao=0.35):
         nova_populacao = []
 
         while len(nova_populacao) < self.tamanho_populacao:
@@ -55,11 +55,9 @@ class Populacao:
         self.avaliar()
         
     def aplicar_elitismo(self,melhor_global):
-        # Selecionar os melhores indivíduos para sobreviverem
         elite = math.ceil(0.05 * self.tamanho_populacao)
         
 
-        # Substituir os piores indivíduos pelos melhores
         for i in range(elite):
             self.individuos.remove(self.pior_individuo)
             self.individuos.append(melhor_global)
@@ -67,5 +65,4 @@ class Populacao:
 
             
 
-        # Atualizar pior indivíduo após elitismo
         self.pior_individuo = max(self.individuos, key=lambda ind: ind.calcular_aptidao())

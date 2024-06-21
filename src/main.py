@@ -66,22 +66,18 @@ def ProcessarDados(Dados):
 def GraficoPopulacao(PassagemIdas, PassagemVolta):
     fig, axs = plt.subplots(2, 1, figsize=(10, 8))
 
-    # Gráfico de barras para PassagemIdas
     axs[0].bar(range(len(PassagemIdas)), PassagemIdas, color='blue')
     axs[0].set_title('Passagens de Ida')
     axs[0].set_xlabel('Índice')
     axs[0].set_ylabel('Preço')
 
-    # Gráfico de barras para PassagemVolta
     axs[1].bar(range(len(PassagemVolta)), PassagemVolta, color='green')
     axs[1].set_title('Passagens de Volta')
     axs[1].set_xlabel('Índice')
     axs[1].set_ylabel('Preço')
 
-    # Ajustar layout
     plt.tight_layout()
 
-    # Exibir o gráfico
     plt.show()
 
 
@@ -107,10 +103,14 @@ def AnaliseEstatistica(media_aptidao, melhor_aptidao, pior_aptidao, nome, num_ge
     plt.grid(True)
     plt.show()
 
-# Exemplo de uso:
-# Suponha que você tenha definido media_aptidaoIda, melhor_aptidaoIda, pior_aptidaoIda e num_geracoes corretamente
-# AnaliseEstatistica(media_aptidaoIda, melhor_aptidaoIda, pior_aptidaoIda, 'Ida', num_geracoes)
 
+
+def imprimir_resultados(Melhor):
+    preco, tempos_espera = Melhor.Resultados()
+
+    print(f"Preço Final: {preco}")
+    print("Tempos de Espera por Pessoa:")
+    for idx, tempo in enumerate(tempos_espera):    print(f"Pessoa {idx + 1}: {tempo} minutos")
 
 if __name__ == "__main__":
     caminho_arquivo = 'flights.txt'
@@ -122,7 +122,7 @@ if __name__ == "__main__":
     keyIdas = ["BRUFCO", "LHRFCO", "MADFCO", "DUBFCO", "CDGFCO", "LISFCO"]
     keyVolta = ["FCOBRU", "FCOLHR", "FCOMAD", "FCODUB", "FCOCDG", "FCOLIS"]
 
-    tamanho_populacao = 300
+    tamanho_populacao =200
 
     populacaoida = Populacao(Voos_ida, tamanho_populacao, keyIdas, 1)
     populacaovolta = Populacao(Voos_Volta, tamanho_populacao, keyVolta, 0)
@@ -130,7 +130,7 @@ if __name__ == "__main__":
     ga1 = AlgoritmoGenetico(populacaoida)
     ga2 = AlgoritmoGenetico(populacaovolta)
 
-    num_geracoes = 200
+    num_geracoes = 100
 
     melhor_aptidaoIda, pior_aptidaoIda, media_aptidaoIda, melhor_globalIda = ga1.executar(num_geracoes)
     melhor_aptidaoVolta, pior_aptidaoVolta, media_aptidaoVolta, melhor_globalVolta = ga2.executar(num_geracoes)
@@ -145,3 +145,8 @@ if __name__ == "__main__":
     print(melhor_globalVolta)
     print(f'Aptidão do Melhor Indivíduo: {melhor_aptidaoVolta[-1]}')
     AnaliseEstatistica(media_aptidaoVolta, melhor_aptidaoVolta, pior_aptidaoVolta, 'Volta', num_geracoes)
+    print("Performace do Melhor conjunto")
+    print("ida")
+    imprimir_resultados(melhor_globalIda)
+    print("volta")
+    imprimir_resultados(melhor_globalVolta)
