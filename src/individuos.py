@@ -120,9 +120,27 @@ class Individuo:
         filho2.voos = filho2_genes
 
         return filho1, filho2
-    
+    def crossoverMask(self, other,VoosDisponiveis):
+        # Criação de uma máscara aleatória
+        mask =[0 ,0,0,1,1,1]
+ 
+        # Filho 1
+        filho1 = Individuo(VoosDisponiveis, self.key, self.flag)  
+        filho1.voos = [self.voos[i] if mask[i] == 0 else other.voos[i] for i in range(len(self.voos))]
+
+        # Filho 2
+        filho2 = Individuo(VoosDisponiveis, self.key, self.flag)  
+        filho2.voos = [other.voos[i] if mask[i] == 0 else self.voos[i] for i in range(len(self.voos))]
+        
+        return filho1, filho2
+    def mutacaoSimples(self,voos_disponiveis,taxa):
+      if random.random() < taxa:
+        i = random.randint(0, 5)
+        rota = list(voos_disponiveis.keys())[i]
+        self.voos[i] = Voo(*random.choice(voos_disponiveis[rota]))
+        
     def mutacao(self, voos_disponiveis,taxa):
-      if random.random() >  taxa:
+      if random.random() <  taxa:
         mask = [random.randint(0, 1) for _ in range(len(self.voos))]
 
         for i in range(len(self.voos)):

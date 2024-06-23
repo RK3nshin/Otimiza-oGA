@@ -1,108 +1,58 @@
 from individuos import Individuo
 from Populacao import Populacao
 from AlgoritmoGenetico import AlgoritmoGenetico
+from ProcessarDados import ProcessarDados 
 import matplotlib.pyplot as plt
+import numpy as np
+import threading
 
 
+def executar_ga1(resultados, indice, ga1, num_geracoes):
+    resultados[indice] = ga1.executar(num_geracoes)
 
-def ProcessarDados(Dados):
-    BRUFCO = []
-    LHRFCO = []
-    MADFCO = []
-    DUBFCO = []
-    CDGFCO = []
-    LISFCO = []
-    FCOBRU = []
-    FCOLHR = []
-    FCOMAD = []
-    FCODUB = []
-    FCOCDG = []
-    FCOLIS = []
+def executar_ga2(resultados, indice, ga2, num_geracoes):
+    resultados[indice] = ga2.executar(num_geracoes)
 
-    for linha in Dados:
-        linha = linha.strip()  
-        if linha:  
-            Voo = linha.split(',')
-            Origem = Voo[0]
-            Destino = Voo[1]
-            HorarioPartida = float(Voo[2].split(':')[0]) * 60 + float(Voo[2].split(':')[1])
-            HorarioChegada = float(Voo[3].split(':')[0]) * 60 + float(Voo[3].split(':')[1])
-            Preco = float(Voo[4])
-
-            # Adiciona o voo ao dicionário correspondente
-            voo_info = (Origem, Destino, HorarioPartida, HorarioChegada, Preco)
-
-            if Origem == 'BRU' and Destino == 'FCO':
-                BRUFCO.append(voo_info)
-            elif Origem == 'LHR' and Destino == 'FCO':
-                LHRFCO.append(voo_info)
-            elif Origem == 'MAD' and Destino == 'FCO':
-                MADFCO.append(voo_info)
-            elif Origem == 'DUB' and Destino == 'FCO':
-                DUBFCO.append(voo_info)
-            elif Origem == 'CDG' and Destino == 'FCO':
-                CDGFCO.append(voo_info)
-            elif Origem == 'LIS' and Destino == 'FCO':
-                LISFCO.append(voo_info)
-            elif Origem == 'FCO' and Destino == 'BRU':
-                FCOBRU.append(voo_info)
-            elif Origem == 'FCO' and Destino == 'LHR':
-                FCOLHR.append(voo_info)
-            elif Origem == 'FCO' and Destino == 'MAD':
-                FCOMAD.append(voo_info)
-            elif Origem == 'FCO' and Destino == 'DUB':
-                FCODUB.append(voo_info)
-            elif Origem == 'FCO' and Destino == 'CDG':
-                FCOCDG.append(voo_info)
-            elif Origem == 'FCO' and Destino == 'LIS':
-                FCOLIS.append(voo_info)
-    
-    Voos_Ida = {"BRUFCO": BRUFCO, "LHRFCO": LHRFCO, "MADFCO": MADFCO, "DUBFCO": DUBFCO, "CDGFCO": CDGFCO, "LISFCO": LISFCO}
-    Voos_Volta = {"FCOBRU": FCOBRU, "FCOLHR": FCOLHR, "FCOMAD": FCOMAD, "FCODUB": FCODUB, "FCOCDG": FCOCDG, "FCOLIS": FCOLIS}
-
-    return [Voos_Ida,Voos_Volta]
-
-
-def GraficoPopulacao(PassagemIdas, PassagemVolta):
-    fig, axs = plt.subplots(2, 1, figsize=(10, 8))
-
-    axs[0].bar(range(len(PassagemIdas)), PassagemIdas, color='blue')
-    axs[0].set_title('Passagens de Ida')
-    axs[0].set_xlabel('Índice')
-    axs[0].set_ylabel('Preço')
-
-    axs[1].bar(range(len(PassagemVolta)), PassagemVolta, color='green')
-    axs[1].set_title('Passagens de Volta')
-    axs[1].set_xlabel('Índice')
-    axs[1].set_ylabel('Preço')
-
-    plt.tight_layout()
-
-    plt.show()
 
 
 def AnaliseEstatistica(media_aptidao, melhor_aptidao, pior_aptidao, nome, num_geracoes):
-    # Gráfico da média de aptidão por geração
     plt.figure(figsize=(10, 6))
+
+    # Plotar média de aptidão
     plt.plot(range(1, num_geracoes + 1), media_aptidao, label='Média de Aptidão')
-    plt.title(f'Média de Aptidão por Geração - {nome}')
-    plt.xlabel('Geração')
-    plt.ylabel('Aptidão')
-    plt.legend()
-    plt.grid(True)
-    plt.show()
 
-    # Gráfico da melhor e pior aptidão por geração
-    plt.figure(figsize=(10, 6))
+    # Plotar melhor aptidão
     plt.plot(range(1, num_geracoes + 1), melhor_aptidao, label=f'Melhor Aptidão - {nome}')
+
+    # Plotar pior aptidão
     plt.plot(range(1, num_geracoes + 1), pior_aptidao, label=f'Pior Aptidão - {nome}')
-    plt.title(f'Melhor e Pior Aptidão por Geração - {nome}')
+
+    plt.title(f'Aptidão por Geração - {nome}')
     plt.xlabel('Geração')
     plt.ylabel('Aptidão')
+    
     plt.legend()
     plt.grid(True)
+    
     plt.show()
 
+def Analise(Ida, Volta):
+    # Gráfico das passagens vencedoras para Ida
+    fig, axs = plt.subplots(2, 1, figsize=(10, 8))
+
+    axs[0].bar(range(len(Ida)), Ida, color='blue')
+    axs[0].set_title('Passagens Vencedoras para Ida')
+    axs[0].set_xlabel('Índividuos')
+    axs[0].set_ylabel('Aptidão')
+
+    # Gráfico das passagens vencedoras para Volta
+    axs[1].bar(range(len(Volta)), Volta, color='green')
+    axs[1].set_title('Passagens Vencedoras para Volta')
+    axs[1].set_xlabel('Índividuos')
+    axs[1].set_ylabel('Aptidão')
+
+    plt.tight_layout()
+    plt.show()
 
 
 def imprimir_resultados(Melhor):
@@ -119,34 +69,98 @@ if __name__ == "__main__":
     with open(caminho_arquivo, 'r') as TabelaVoos:
         Voos_ida, Voos_Volta = ProcessarDados(TabelaVoos)
     
+    
     keyIdas = ["BRUFCO", "LHRFCO", "MADFCO", "DUBFCO", "CDGFCO", "LISFCO"]
     keyVolta = ["FCOBRU", "FCOLHR", "FCOMAD", "FCODUB", "FCOCDG", "FCOLIS"]
-
     tamanho_populacao =200
-
-    populacaoida = Populacao(Voos_ida, tamanho_populacao, keyIdas, 1)
-    populacaovolta = Populacao(Voos_Volta, tamanho_populacao, keyVolta, 0)
-
-    ga1 = AlgoritmoGenetico(populacaoida)
-    ga2 = AlgoritmoGenetico(populacaovolta)
-
     num_geracoes = 100
-
-    melhor_aptidaoIda, pior_aptidaoIda, media_aptidaoIda, melhor_globalIda = ga1.executar(num_geracoes)
-    melhor_aptidaoVolta, pior_aptidaoVolta, media_aptidaoVolta, melhor_globalVolta = ga2.executar(num_geracoes)
-
-    print("Passagem de Ida \n")
-    print(melhor_globalIda)
-    print(f'Aptidão do Melhor Indivíduo: {melhor_aptidaoIda[-1]}')
+    teste = False
     
-    AnaliseEstatistica(media_aptidaoIda, melhor_aptidaoIda, pior_aptidaoIda, 'Ida', num_geracoes)
 
-    print("Passagem de Volta \n")
-    print(melhor_globalVolta)
-    print(f'Aptidão do Melhor Indivíduo: {melhor_aptidaoVolta[-1]}')
-    AnaliseEstatistica(media_aptidaoVolta, melhor_aptidaoVolta, pior_aptidaoVolta, 'Volta', num_geracoes)
-    print("Performace do Melhor conjunto")
-    print("ida")
-    imprimir_resultados(melhor_globalIda)
-    print("volta")
-    imprimir_resultados(melhor_globalVolta)
+    
+    if teste :
+        MelhoresGlobalIda = []
+        MelhoresGlobalVolta = []
+        
+        for i in range(30):
+
+
+            populacaoida = Populacao(Voos_ida, tamanho_populacao, keyIdas, 1)
+            populacaovolta = Populacao(Voos_Volta, tamanho_populacao, keyVolta, 0)
+
+            ga1 = AlgoritmoGenetico(populacaoida)
+            ga2 = AlgoritmoGenetico(populacaovolta)
+
+            
+            resultados = [None, None]
+            # Criar as threads
+            thread1 = threading.Thread(target=executar_ga1, args=(resultados, 0, ga1, num_geracoes))
+            thread2 = threading.Thread(target=executar_ga2, args=(resultados, 1, ga2, num_geracoes))
+
+            # Iniciar as threads
+            thread1.start()
+            thread2.start()
+
+            # Esperar que ambas as threads terminem
+            thread1.join()
+            thread2.join()
+
+        
+            melhor_aptidaoIda, pior_aptidaoIda, media_aptidaoIda, MelhorIda = resultados[0]
+            melhor_aptidaoVolta, pior_aptidaoVolta, media_aptidaoVolta, MelhorVolta = resultados[1]
+            MelhoresGlobalIda.append(MelhorIda.calcular_aptidao())
+            MelhoresGlobalVolta.append(MelhorVolta.calcular_aptidao())
+            print(i)
+       
+        Analise(MelhoresGlobalIda,MelhoresGlobalVolta)
+        print ('Média')
+        print(f'Média dos Valores de ida: {np.mean(MelhoresGlobalIda)}')
+        print(f'Média dos Valores de Volta: {np.mean(MelhoresGlobalVolta)}')
+        print('Variância')
+        print(f'Variância dos Valores de ida: {np.var(MelhoresGlobalIda)}')
+        print(f'Variância dos Valores de Volta: {np.var(MelhoresGlobalVolta)}')
+        print('Desvio Padrão')
+        print(f'Desvio Padrão dos Valores de ida: {np.std(MelhoresGlobalIda)}')
+        print(f'Desvio Padrão dos Valores de Volta: {np.std(MelhoresGlobalVolta)}')
+    else: 
+         
+    
+        populacaoida = Populacao(Voos_ida, tamanho_populacao, keyIdas, 1)
+        populacaovolta = Populacao(Voos_Volta, tamanho_populacao, keyVolta, 0)
+
+        ga1 = AlgoritmoGenetico(populacaoida)
+        ga2 = AlgoritmoGenetico(populacaovolta)
+
+            
+        resultados = [None, None]
+        # Criar as threads
+        thread1 = threading.Thread(target=executar_ga1, args=(resultados, 0, ga1, num_geracoes))
+        thread2 = threading.Thread(target=executar_ga2, args=(resultados, 1, ga2, num_geracoes))
+
+        # Iniciar as threads
+        thread1.start()
+        thread2.start()
+
+        thread1.join()
+        thread2.join()
+
+        
+        melhor_aptidaoIda, pior_aptidaoIda, media_aptidaoIda, MelhorIda = resultados[0]
+        melhor_aptidaoVolta, pior_aptidaoVolta, media_aptidaoVolta, MelhorVolta= resultados[1]
+         
+        print("Passagem de Ida \n")
+        print(MelhorIda)
+        print(f'Aptidão do Melhor Indivíduo: {melhor_aptidaoIda[-1]}')
+            
+        AnaliseEstatistica(media_aptidaoIda, melhor_aptidaoIda, pior_aptidaoIda, 'Ida', num_geracoes)
+
+        print("Passagem de Volta \n")
+        print(MelhorVolta)
+        print(f'Aptidão do Melhor Indivíduo: {melhor_aptidaoVolta[-1]}')
+        AnaliseEstatistica(media_aptidaoVolta, melhor_aptidaoVolta, pior_aptidaoVolta, 'Volta', num_geracoes)
+        print("Performace do Melhor conjunto")
+        print("ida")
+        imprimir_resultados(MelhorIda)
+        print("volta")
+        imprimir_resultados(MelhorVolta)
+       

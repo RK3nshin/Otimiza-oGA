@@ -27,12 +27,12 @@ class Populacao:
     def selecao_por_torneio(self, k=2):
         competidores = random.sample(self.individuos, k)
         sorte = random.random()
-        if sorte > 0.2:
+        if sorte > 0.1:
             return min(competidores, key=lambda ind: ind.calcular_aptidao())
         else:
             return max(competidores, key=lambda ind: ind.calcular_aptidao())
 
-    def proxima_geracao(self, prob_cruzamento=0.80, prob_mutacao=0.35):
+    def proxima_geracao(self, prob_cruzamento=0.80, prob_mutacaoSimples=0.10):
         nova_populacao = []
 
         while len(nova_populacao) < self.tamanho_populacao:
@@ -41,28 +41,28 @@ class Populacao:
 
             # Cruzamento (crossover)
             if random.random() < prob_cruzamento:
-                filho1, filho2 = pai1.crossover(pai2, self.voos_disponiveis)
+                filho1, filho2 = pai1.crossoverMask(pai2, self.voos_disponiveis)
             else:
                 filho1, filho2 = pai1, pai2
 
             # Mutação
-            filho1.mutacao(self.voos_disponiveis, prob_mutacao)
-            filho2.mutacao(self.voos_disponiveis, prob_mutacao)
+            filho1.mutacaoSimples(self.voos_disponiveis, prob_mutacaoSimples)
+            filho2.mutacaoSimples(self.voos_disponiveis, prob_mutacaoSimples)
 
             nova_populacao.extend([filho1, filho2])
 
         self.individuos = nova_populacao[:self.tamanho_populacao]
         self.avaliar()
         
-    def aplicar_elitismo(self,melhor_global):
-        elite = math.ceil(0.05 * self.tamanho_populacao)
+    def aplicar_elitismo(self, melhor_global):
+        elite = math.ceil(0.02 * self.tamanho_populacao)
+        ListaOrdenada = sorted(self.individuos, key=lambda ind: ind.calcular_aptidao())
+
+        # Selecionar os piores
+        piores = ListaOrdenada[:elite]
         
-
-        for i in range(elite):
-            self.individuos.remove(self.pior_individuo)
+        for pior in piores:
+            self.individuos.remove(pior)
             self.individuos.append(melhor_global)
-            self.pior_individuo = max(self.individuos, key=lambda ind: ind.calcular_aptidao())
-
-            
 
         self.pior_individuo = max(self.individuos, key=lambda ind: ind.calcular_aptidao())

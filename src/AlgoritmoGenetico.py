@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+
 class AlgoritmoGenetico:
     def __init__(self, populacao):
         self.populacao = populacao
@@ -13,7 +15,7 @@ class AlgoritmoGenetico:
 
             # Atualizar o melhor global se necessário
             if self.melhor_global is None or self.populacao.melhor_individuo.calcular_aptidao() < self.melhor_global.calcular_aptidao():
-                self.melhor_global = self.populacao.melhor_individuo.copy()  # Faça uma cópia independente
+                self.melhor_global = self.populacao.melhor_individuo.copy()
 
             self.populacao.aplicar_elitismo(self.melhor_global.copy())
             melhor_aptidao_por_geracao.append(self.melhor_global.calcular_aptidao())
@@ -21,6 +23,9 @@ class AlgoritmoGenetico:
             media_aptidao_por_geracao.append(self.populacao.media_aptidao)
 
             self.populacao.proxima_geracao()
+            
+          
             num_geracoes -= 1
 
         return melhor_aptidao_por_geracao, pior_aptidao_por_geracao, media_aptidao_por_geracao, self.melhor_global.copy()
+
