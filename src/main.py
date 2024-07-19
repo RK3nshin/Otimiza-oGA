@@ -18,13 +18,10 @@ def executar_ga2(resultados, indice, ga2, num_geracoes):
 def AnaliseEstatistica(media_aptidao, melhor_aptidao, pior_aptidao, nome, num_geracoes):
     plt.figure(figsize=(10, 6))
 
-    # Plotar média de aptidão
     plt.plot(range(1, num_geracoes + 1), media_aptidao, label='Média de Aptidão')
 
-    # Plotar melhor aptidão
     plt.plot(range(1, num_geracoes + 1), melhor_aptidao, label=f'Melhor Aptidão - {nome}')
 
-    # Plotar pior aptidão
     plt.plot(range(1, num_geracoes + 1), pior_aptidao, label=f'Pior Aptidão - {nome}')
 
     plt.title(f'Aptidão por Geração - {nome}')
@@ -37,7 +34,6 @@ def AnaliseEstatistica(media_aptidao, melhor_aptidao, pior_aptidao, nome, num_ge
     plt.show()
 
 def Analise(Ida, Volta):
-    # Gráfico das passagens vencedoras para Ida
     fig, axs = plt.subplots(2, 1, figsize=(10, 8))
 
     axs[0].bar(range(len(Ida)), Ida, color='blue')
@@ -45,7 +41,6 @@ def Analise(Ida, Volta):
     axs[0].set_xlabel('Índividuos')
     axs[0].set_ylabel('Aptidão')
 
-    # Gráfico das passagens vencedoras para Volta
     axs[1].bar(range(len(Volta)), Volta, color='green')
     axs[1].set_title('Passagens Vencedoras para Volta')
     axs[1].set_xlabel('Índividuos')
@@ -65,7 +60,6 @@ def imprimir_resultados(Melhor):
 if __name__ == "__main__":
     caminho_arquivo = 'flights.txt'
 
-    # Processar os dados do arquivo de voos
     with open(caminho_arquivo, 'r') as TabelaVoos:
         Voos_ida, Voos_Volta = ProcessarDados(TabelaVoos)
     
@@ -97,11 +91,9 @@ if __name__ == "__main__":
             thread1 = threading.Thread(target=executar_ga1, args=(resultados, 0, ga1, num_geracoes))
             thread2 = threading.Thread(target=executar_ga2, args=(resultados, 1, ga2, num_geracoes))
 
-            # Iniciar as threads
             thread1.start()
             thread2.start()
 
-            # Esperar que ambas as threads terminem
             thread1.join()
             thread2.join()
 
@@ -133,11 +125,9 @@ if __name__ == "__main__":
 
             
         resultados = [None, None]
-        # Criar as threads
         thread1 = threading.Thread(target=executar_ga1, args=(resultados, 0, ga1, num_geracoes))
         thread2 = threading.Thread(target=executar_ga2, args=(resultados, 1, ga2, num_geracoes))
 
-        # Iniciar as threads
         thread1.start()
         thread2.start()
 

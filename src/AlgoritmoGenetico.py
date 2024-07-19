@@ -13,7 +13,6 @@ class AlgoritmoGenetico:
         while num_geracoes > 0:
             self.populacao.avaliar()
 
-            # Atualizar o melhor global se necessário
             if self.melhor_global is None or self.populacao.melhor_individuo.calcular_aptidao() < self.melhor_global.calcular_aptidao():
                 self.melhor_global = self.populacao.melhor_individuo.copy()
 

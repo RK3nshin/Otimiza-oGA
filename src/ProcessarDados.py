@@ -23,7 +23,6 @@ def ProcessarDados(Dados):
             HorarioChegada = float(Voo[3].split(':')[0]) * 60 + float(Voo[3].split(':')[1])
             Preco = float(Voo[4])
 
-            # Adiciona o voo ao dicionário correspondente
             voo_info = (Origem, Destino, HorarioPartida, HorarioChegada, Preco)
 
             if Origem == 'BRU' and Destino == 'FCO':

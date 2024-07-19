@@ -25,7 +25,6 @@ class Individuo:
     def __init__(self, VoosDisponiveis, key,flag):
         self.key = key
         self.flag = flag
-        # Defenir um passagem aleatóriamente
         self.voos = [Voo(*random.choice(VoosDisponiveis[rota])) for rota in key
                         if rota in VoosDisponiveis]
       
@@ -39,7 +38,6 @@ class Individuo:
             for voo in self.voos:
                 PrecoFinal += voo.Preco
 
-            # Calcula o tempo de espera para os voos de ida
             tempos_chegada_ida = [voo.HorarioChegada for voo in self.voos]
             TempoMaximoChegada = max(tempos_chegada_ida)
             TemposEsperaPorPessoa = [TempoMaximoChegada - tempo for tempo in tempos_chegada_ida]
@@ -50,7 +48,6 @@ class Individuo:
             for voo in self.voos:
                 PrecoFinal += voo.Preco
 
-            # Calcula o tempo de espera para os voos de volta
             tempos_partida_volta = [voo.HorarioPartida for voo in self.voos]
             TempoMinimoPartida = min(tempos_partida_volta)
             TemposEsperaPorPessoa = [tempo - TempoMinimoPartida  for tempo in tempos_partida_volta]
@@ -58,9 +55,7 @@ class Individuo:
             return [PrecoFinal,TemposEsperaPorPessoa]
         
     def copy(self):
-        # Criar uma nova instância do Individuo
         novo_individuo = Individuo([], self.key, self.flag)
-        # Copiar todos os atributos necessários
         novo_individuo.voos = [Voo(voo.Origem, voo.Destino, voo.HorarioPartida, voo.HorarioChegada, voo.Preco) for voo in self.voos]
         return novo_individuo
     
@@ -74,7 +69,6 @@ class Individuo:
             for voo in self.voos:
                 PrecoFinal += voo.Preco
 
-            # Calcula o tempo de espera para os voos de ida
             tempos_chegada_ida = [voo.HorarioChegada for voo in self.voos]
             TempoMaximoChegada = max(tempos_chegada_ida)
             TemposEsperaPorPessoa = [TempoMaximoChegada - tempo for tempo in tempos_chegada_ida]
@@ -91,7 +85,6 @@ class Individuo:
             for voo in self.voos:
                 PrecoFinal += voo.Preco
 
-            # Calcula o tempo de espera para os voos de volta
             tempos_partida_volta = [voo.HorarioPartida for voo in self.voos]
             TempoMinimoPartida = min(tempos_partida_volta)
             TemposEsperaPorPessoa = [tempo - TempoMinimoPartida  for tempo in tempos_partida_volta]
@@ -121,14 +114,11 @@ class Individuo:
 
         return filho1, filho2
     def crossoverMask(self, other,VoosDisponiveis):
-        # Criação de uma máscara aleatória
         mask =[0 ,0,0,1,1,1]
  
-        # Filho 1
         filho1 = Individuo(VoosDisponiveis, self.key, self.flag)  
         filho1.voos = [self.voos[i] if mask[i] == 0 else other.voos[i] for i in range(len(self.voos))]
 
-        # Filho 2
         filho2 = Individuo(VoosDisponiveis, self.key, self.flag)  
         filho2.voos = [other.voos[i] if mask[i] == 0 else self.voos[i] for i in range(len(self.voos))]
         
